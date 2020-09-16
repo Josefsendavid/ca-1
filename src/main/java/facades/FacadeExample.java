@@ -55,11 +55,11 @@ public class FacadeExample {
     }
 
     //TODO Remove/Change this before use
-    public long getRenameMeCount() {
+    public long getMemberCount() {
         EntityManager em = emf.createEntityManager();
         try {
-            long renameMeCount = (long) em.createQuery("SELECT COUNT(r) FROM Members r").getSingleResult();
-            return renameMeCount;
+            long memberCount = (long) em.createQuery("SELECT COUNT(m) FROM Members m").getSingleResult();
+            return memberCount;
         } finally {
             em.close();
         }

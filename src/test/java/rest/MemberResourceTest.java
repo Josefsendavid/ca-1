@@ -23,11 +23,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class RenameMeResourceTest {
+public class MemberResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Members r1,r2;
+    private static Members m1,m2,m3;
     
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -64,13 +64,15 @@ public class RenameMeResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        r1 = new Members("Some txt","More text", "Third text");
-        r2 = new Members("aaa","bbb", "ccc");
+        m1 = new Members("Mathias Noe Clausen", "cph-mc366@cphbusiness.dk", "cph-mc366");
+        m2 = new Members("Gustav Wernegreen", "cph-gw30@cphbusiness.dk", "cph-gw30");
+        m3 = new Members("David Josefsen", "cph-dj154@cphbusiness.dk", "cph-dj154");
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Members.deleteAllRows").executeUpdate();
-            em.persist(r1);
-            em.persist(r2); 
+            em.persist(m1);
+            em.persist(m2);
+            em.persist(m3);
             em.getTransaction().commit();
         } finally { 
             em.close();
@@ -83,16 +85,16 @@ public class RenameMeResourceTest {
         given().when().get("/groupmembers").then().statusCode(200);
     }
    
-    //This test assumes the database contains two rows
-    @Test
-    public void testDummyMsg() throws Exception {
-        given()
-        .contentType("application/json")
-        .get("/groupmembers/").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("msg", equalTo("Hello World"));   
-    }
+//    //This test assumes the database contains two rows
+//    @Test
+//    public void testDummyMsg() throws Exception {
+//        given()
+//        .contentType("application/json")
+//        .get("/groupmembers/").then()
+//        .assertThat()
+//        .statusCode(HttpStatus.OK_200.getStatusCode())
+//        .body("msg", equalTo("Hello World"));   
+//    }
     
     @Test
     public void testCount() throws Exception {
@@ -101,18 +103,19 @@ public class RenameMeResourceTest {
         .get("/groupmembers/count").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(2));   
+        .body("count", equalTo(3));   
+    }
+    public void testGetAll() {
+        given()
+                .contentType("application/json")
+                .get("/groupmembers/all")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("size()", is(3))
+                .and()
+                .body("name", hasItems("r1","r2","r3"));
+                
     }
     
-    @Test
-    public void testGetAllMembers() throws Exception {
-        given()
-        .contentType("application/json")
-        .get("/groupmembers/all").then()
-        .assertThat()
-        .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("size()", is(2))
-        .and()
-        .body("name",hasItems("Some txt","aaa"));
-    }
 }
