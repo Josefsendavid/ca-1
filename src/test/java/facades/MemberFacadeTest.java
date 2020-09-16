@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class MemberFacadeTest {
     private static Members m1,m2,m3;
     private static EntityManagerFactory emf;
-    private static FacadeExample facade;
+    private static MemberFacade facade;
 
     public MemberFacadeTest() {
     }
@@ -26,7 +26,7 @@ public class MemberFacadeTest {
     @BeforeAll
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
-       facade = FacadeExample.getFacadeExample(emf);
+       facade = MemberFacade.getFacadeExample(emf);
     }
 
     @AfterAll

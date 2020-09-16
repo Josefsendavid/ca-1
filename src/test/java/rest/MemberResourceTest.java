@@ -114,7 +114,7 @@ public class MemberResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(3))
                 .and()
-                .body("name", hasItems("r1","r2","r3"));
+                .body("name", hasItems("m1","m2","m3"));
                 
     }
     

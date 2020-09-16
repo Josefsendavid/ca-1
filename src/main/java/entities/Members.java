@@ -1,6 +1,6 @@
 package entities;
 
-import static facades.FacadeExample.setUp;
+import static facades.MemberFacade.setUp;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
