@@ -67,7 +67,7 @@ public class MemberFacade {
 
     }
     
-    public List getAllNames(){
+    public List<MembersDTO> getAllNames(){
         EntityManager em = emf.createEntityManager();
          try {
               Query query = em.createNamedQuery("Members.getAll");

@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.MembersDTO;
 import entities.Members;
 import utils.EMF_Creator;
 import facades.MemberFacade;
@@ -42,7 +43,7 @@ public class MemberResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getAll(){
-            List<Members> allMembers = FACADE.getAllNames();
+            List<MembersDTO> allMembers = FACADE.getAllNames();
         return GSON.toJson(allMembers);
     }
 }

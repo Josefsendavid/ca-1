@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -13,7 +15,13 @@ import javax.persistence.TemporalType;
  *
  * @author David
  */
+
 @Entity
+@NamedQueries({
+@NamedQuery(name = "Cars.deleteAllRows", query = "DELETE from Cars"),
+@NamedQuery(name = "Cars.getAll", query = "SELECT c FROM Cars c"),})
+
+
 public class Cars implements Serializable {
 
     private static final long serialVersionUID = 1L;
