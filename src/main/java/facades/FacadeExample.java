@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -63,6 +64,18 @@ public class FacadeExample {
             em.close();
         }
 
+    }
+    
+    public List getAllNames(){
+        EntityManager em = emf.createEntityManager();
+         try {
+              Query query = em.createNamedQuery("Members.getAll");
+              List<Members> members = query.getResultList();
+              return members;
+        }         
+        finally {
+            em.close();
+        }
     }
 
     public static void main(String[] args) {
