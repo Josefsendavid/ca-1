@@ -41,9 +41,11 @@
                                     "<td>" + p.studentId + "</td>" + "</tr>"
                                     return line;
                             })
-                            line = line + "</tr>" + "</tbody>" + "</table>"
+                            members = line + "</tr>" + "</tbody>" + "</table>"
                             console.log(members)
-                            document.getElementById("member").innerHTML = line;
+                            document.getElementById("member").innerHTML = members;
+                            
+                            console.log(members)
                     })
             }
             
@@ -52,6 +54,35 @@
                 getMembers();
             })
         </script> <div id="eko">
+            
+            
+            <div id="jokesspot">
+        </div>
+            
+            <script>
+            getJokes();
+            function getJokes(){
+            var ty = "type"
+            fetch("api/jokes/id/51")
+                    .then(res => res.json())
+                    .then(data => {
+                    console.log("-------------------------------------------------------" + data[0].joke)
+
+                            line = "<table class=\"table table-dark\">" + "<thead class=\"thead-dark\">" + "<tr>" + "<th scope=\"col\">ID</th>" + "<th scope=\"col\">Joke</th>"
+                            + "<th scope=\"col\">Joke Reference</th>" + "<th scope=\"col\">Joke Type</th>" + "</tr>" + "</thead>" + "<tbody>"
+
+                            var jokes = data.map((p) => {
+                            line = line + "<tr>" + "<td>" + p.id + "</td>" + "<td>" + p.joke + "</td>" + "<td>" + p.reference + "</td>" +
+                                    "<td>" + p.type + "</td>" + "</tr>"
+                                    return line;
+                            })
+                            jokes = line + "</tr>" + "</tbody>" + "</table>"
+                            console.log(jokes)
+                            document.getElementById("jokesspot").innerHTML = line;
+                    })
+            }
+        </script> <div id="jokes">
+            
             
     </body>
 </html>

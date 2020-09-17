@@ -39,7 +39,6 @@ public class MemberFacade {
     }
 
     public static void setUp() {
-
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
         EntityManager em = emf.createEntityManager();
         try {
@@ -80,7 +79,6 @@ public class MemberFacade {
     }
 
     public static void main(String[] args) {
-
         setUp();
     }
 
