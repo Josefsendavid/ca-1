@@ -1,7 +1,6 @@
 package rest;
 
 import entities.Cars;
-import entities.Members;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -21,7 +20,6 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
@@ -62,14 +60,32 @@ public class CarsResourceTest {
 
     @BeforeEach
     public void setUp() {
-
+        EntityManager em = emf.createEntityManager();
+        Date date = new Date();
+        c1 = new Cars(1997, "Ford", "E350", 3000, "test", date);
+        c2 = new Cars(1999, "Chevy", "Venture", 4900, "test1", date);
+        c3 = new Cars(2000, "Chevy", "Venture", 5000, "test3", date);
+        c4 = new Cars(1996, "Jeep", "Grand Cherokee", 4799, "test4", date);
+        c5 = new Cars(2005, "Volvo", "v70", 44799, "test5", date);
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("Cars.deleteAllRows").executeUpdate();
+            em.persist(c1);
+            em.persist(c2);
+            em.persist(c3);
+            em.persist(c4);
+            em.persist(c5);
+            em.getTransaction().commit();
+        } finally { 
+            em.close();
+        }
     }
     
-    @Test
-    public void testServerIsUp() {
-        System.out.println("Testing is server UP");
-        given().when().get("/groupmembers").then().statusCode(200);
-    }
+//    @Test
+//    public void testServerIsUp() {
+//        System.out.println("Testing is server UP");
+//        given().when().get("/cars").then().statusCode(200);
+//    }
     
     @Test
     public void testCount() throws Exception {
@@ -91,7 +107,7 @@ public class CarsResourceTest {
                 .body("size()", is(5))
                 .and()
                 .body("owner", hasItems("test","test1","test3","test4","test5"));
-                //tester ud fra owner fordi id er mærkelig
+                
     }
     
 }
