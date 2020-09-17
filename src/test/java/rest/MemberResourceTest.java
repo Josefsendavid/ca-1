@@ -105,6 +105,7 @@ public class MemberResourceTest {
         .statusCode(HttpStatus.OK_200.getStatusCode())
         .body("count", equalTo(3));   
     }
+    @Test
     public void testGetAll() {
         given()
                 .contentType("application/json")
@@ -114,7 +115,7 @@ public class MemberResourceTest {
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("size()", is(3))
                 .and()
-                .body("name", hasItems("m1","m2","m3"));
+                .body("name", hasItems("Gustav Wernegreen","Mathias Noe Clausen","David Josefsen"));
                 
     }
     
