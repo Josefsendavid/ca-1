@@ -18,7 +18,7 @@
 
         <div id="links">
             <p><a href="cars.html">Link 1</a></p>
-            <p><a href="https://www.mathiasnoeclausen.dk/httponsdag-1.0/getpost">Link 2</a></p>
+            <p><a href="jokes.html">Link 2</a></p>
             <p><a href="https://www.mathiasnoeclausen.dk/httponsdag-1.0/redirect">Link 3</a></p>  
             <p><a href="https://www.mathiasnoeclausen.dk/httponsdag-1.0/redirect">Link 4</a></p> 
         </div>
@@ -56,18 +56,36 @@
         </script> <div id="eko">
             
             
-            <div id="jokesspot">
+        <div id="jokesspot">
         </div>
+          
+        
+        <input type="text" id="typeOf" name="typeOf" value ="">
+        <button id="filterType" onclick="getByType()">Write type to search for</button>
+        
+        <input type="text" id="referenceOf" name="typeOf">
+        <button id="filterRef" onclick="getByReference()">Write reference to search for</button>
+        
+        <input type="text" id="idOf" name="typeOf">
+        <button id="filterId" onclick="getById()">Write id to search for</button>
+        
+        <button id="filterAll" onclick="getByAll()">Get all</button>
+        
+        <button id="filterRandom" onclick="getRandom()">Get random joke</button>
+        
+        <br><br>
+        Selected joke: <div id="jokeFromId"> </div>
+        <br>
+        Random joke:
             
             <script>
-            getJokes();
-            function getJokes(){
-            var ty = "type"
-            fetch("api/jokes/id/51")
+            
+            getJokes("all");
+            
+            function getJokes(str){
+            fetch("api/jokes/" + str)
                     .then(res => res.json())
                     .then(data => {
-                    console.log("-------------------------------------------------------" + data[0].joke)
-
                             line = "<table class=\"table table-dark\">" + "<thead class=\"thead-dark\">" + "<tr>" + "<th scope=\"col\">ID</th>" + "<th scope=\"col\">Joke</th>"
                             + "<th scope=\"col\">Joke Reference</th>" + "<th scope=\"col\">Joke Type</th>" + "</tr>" + "</thead>" + "<tbody>"
 
@@ -81,6 +99,59 @@
                             document.getElementById("jokesspot").innerHTML = line;
                     })
             }
+            
+            function getByType(event){
+                console.log(document.getElementById("typeOf").value)
+                let str = "type/" + document.getElementById("typeOf").value;
+                console.log("INSIDE")
+                getJokes(str);
+                
+                console.log(document.getElementById("typeOf").value)
+                document.getElementById("typeOf").value.innerHTML = "lol";
+                document.getElementById("typeOf").reset;
+                console.log(document.getElementById("typeOf").value)
+            }
+            
+            function getByReference(event){
+                let str = "reference/" + document.getElementById("referenceOf").value;
+                getJokes(str);
+            } 
+            
+            function getById(event){
+                let id = document.getElementById("idOf").value;
+                  fetch("api/jokes/id/" + id)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.joke)
+                        document.getElementById("jokeFromId").innerHTML = data.joke;
+                    })
+            }
+            
+            function getByAll(event){
+                getJokes("all");
+            }
+            
+            function getRandom(event){
+                let size;
+                    fetch("api/jokes/all")
+                    .then(res => res.json())
+                    .then(data => {
+                         let ids = data.map((p) => {
+                            p.id
+                            })
+                            console.log(ids)
+                        
+                              fetch("api/jokes/id/51")
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        console.log(data.joke)
+                                          
+                                        })
+                    })
+                    
+            }
+            
+            
         </script> <div id="jokes">
             
             
