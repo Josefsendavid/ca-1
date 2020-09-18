@@ -4,6 +4,12 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
     <head>
         <title>TODO supply a title</title>
@@ -29,17 +35,8 @@ and open the template in the editor.
             </tbody>
         </table>
 
-
-        <input type="text" id="price" name="price">
-        <button id="filterPrice" onclick="getCars()">Price less than</button>
-
-        <input type="text" id="year" name="price">
-        <button id="filterPrice" onclick="getCars()">Price less than</button>
-
-
         <input type="text" id="price" name="price">
         <button id="filterPrice" onclick="findPrice()">Price less than</button>
-
 
         <button id="sortByYear" onclick="sortCars()">Sort by year</button>
         <script>
@@ -52,40 +49,16 @@ and open the template in the editor.
                 fetch("api/cars/all")
                         .then(res => res.json())
                         .then(data => {
-
-                            console.log("-------------------------------------------------------" + data[1].name)
-                            line = "<table class=\"table table-dark\">" + "<thead class=\"thead-dark\">" + "<tr>" + "<th scope=\"col\">ID</th>" + "<th scope=\"col\">Year</th>"
-                                    + "<th scope=\"col\">Make</th>" + "<th scope=\"col\">Model</th>" + "<th scope=\"col\">Price</th>" + "</tr>" + "</thead>" + "<tbody>"
-
                             var cars = data.map((c) => {
                                 return "<tr><td>" + c.id + "</td> <td>" + c.year + "</td> <td>" + c.make + "</td> <td>" + c.model + "</td> <td>" + c.price + "</td> </tr>";
                             })
-
-                            cars = line + "</tr>" + "</tbody>" + "</table>"
-                            console.log(cars)
-                            document.getElementById("tbody").innerHTML = line;
-
                             const joined = cars.join("");
                             document.getElementById("values").innerHTML = joined;
-
                         });
             }
 
             function findPrice() {
-                console.log(document.getElementById("price").value)
-
                 var lowPrice = [];
-
-                for (var i = 0; i < cars.length; i++) {
-                    if (cars[i].price < document.getElementById("price").value) {
-                        lowPrice.push(cars[i]);
-                    }
-                }
-                console.log(lowPrice);
-                cars = lowPrice;
-                displayCars();
-
-
                 fetch("api/cars/all")
                         .then(res => res.json())
                         .then(data => {
@@ -101,7 +74,6 @@ and open the template in the editor.
                             document.getElementById("values").innerHTML = joined;
                         }
                         )
-
             }
 
 
