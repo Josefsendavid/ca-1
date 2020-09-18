@@ -32,6 +32,13 @@ public class CarsResource {
 
     public CarsResource() {
     }
+    @Path("count")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getRenameMeCount() {
+        long count = FACADE.getCarCount();
+        return "{\"count\":"+count+"}";
+    }
 
     @Path("all")
     @GET

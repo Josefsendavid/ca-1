@@ -31,6 +31,9 @@ public class CarFacade {
         }
         return instance;
     }
+        public static void main(String[] args) {
+        insertData();
+    }
 
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -55,7 +58,16 @@ public class CarFacade {
             em.close();
         }
     }
-    
+        public long getCarCount() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            long carCount = (long) em.createQuery("SELECT COUNT(c) FROM Cars c").getSingleResult();
+            return carCount;
+        } finally {
+            em.close();
+        }
+
+    }
 
     public static List<CarsDTO> getAllCars() {
         EntityManager em = emf.createEntityManager();
@@ -67,5 +79,6 @@ public class CarFacade {
             em.close();
         }
     }
+
 
 }

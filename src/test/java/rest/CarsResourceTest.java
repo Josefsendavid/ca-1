@@ -1,11 +1,12 @@
 package rest;
 
-import entities.Members;
+import entities.Cars;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -19,15 +20,14 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class MemberResourceTest {
+public class CarsResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Members m1,m2,m3;
+    private static Cars c1,c2,c3,c4,c5;
     
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -40,7 +40,7 @@ public class MemberResourceTest {
 
     @BeforeAll
     public static void setUpClass() {
-        //This method must be called before you request the EntityManagerFactory
+
         EMF_Creator.startREST_TestWithDB();
         emf = EMF_Creator.createEntityManagerFactoryForTest();
         
@@ -53,69 +53,60 @@ public class MemberResourceTest {
     
     @AfterAll
     public static void closeTestServer(){
-        //System.in.read();
-         //Don't forget this, if you called its counterpart in @BeforeAll
+
          EMF_Creator.endREST_TestWithDB();
          httpServer.shutdownNow();
     }
-    
-    // Setup the DataBase (used by the test-server and this test) in a known state BEFORE EACH TEST
-    //TODO -- Make sure to change the EntityClass used below to use YOUR OWN (renamed) Entity class
+
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        m1 = new Members("Mathias Noe Clausen", "cph-mc366@cphbusiness.dk", "cph-mc366");
-        m2 = new Members("Gustav Wernegreen", "cph-gw30@cphbusiness.dk", "cph-gw30");
-        m3 = new Members("David Josefsen", "cph-dj154@cphbusiness.dk", "cph-dj154");
+        Date date = new Date();
+        c1 = new Cars(1997, "Ford", "E350", 3000, "test", date);
+        c2 = new Cars(1999, "Chevy", "Venture", 4900, "test1", date);
+        c3 = new Cars(2000, "Chevy", "Venture", 5000, "test3", date);
+        c4 = new Cars(1996, "Jeep", "Grand Cherokee", 4799, "test4", date);
+        c5 = new Cars(2005, "Volvo", "v70", 44799, "test5", date);
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("Members.deleteAllRows").executeUpdate();
-            em.persist(m1);
-            em.persist(m2);
-            em.persist(m3);
+            em.createNamedQuery("Cars.deleteAllRows").executeUpdate();
+            em.persist(c1);
+            em.persist(c2);
+            em.persist(c3);
+            em.persist(c4);
+            em.persist(c5);
             em.getTransaction().commit();
         } finally { 
             em.close();
         }
     }
     
-    @Test
-    public void testServerIsUp() {
-        System.out.println("Testing is server UP");
-        given().when().get("/groupmembers").then().statusCode(200);
-    }
-   
-//    //This test assumes the database contains two rows
 //    @Test
-//    public void testDummyMsg() throws Exception {
-//        given()
-//        .contentType("application/json")
-//        .get("/groupmembers/").then()
-//        .assertThat()
-//        .statusCode(HttpStatus.OK_200.getStatusCode())
-//        .body("msg", equalTo("Hello World"));   
+//    public void testServerIsUp() {
+//        System.out.println("Testing is server UP");
+//        given().when().get("/cars").then().statusCode(200);
 //    }
     
     @Test
     public void testCount() throws Exception {
         given()
         .contentType("application/json")
-        .get("/groupmembers/count").then()
+        .get("/cars/count").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(3));   
+        .body("count", equalTo(5));   
     }
     @Test
     public void testGetAll() {
         given()
                 .contentType("application/json")
-                .get("/groupmembers/all")
+                .get("/cars/all")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(3))
+                .body("size()", is(5))
                 .and()
-                .body("name", hasItems("Gustav Wernegreen","Mathias Noe Clausen","David Josefsen"));
+                .body("owner", hasItems("test","test1","test3","test4","test5"));
                 
     }
     
