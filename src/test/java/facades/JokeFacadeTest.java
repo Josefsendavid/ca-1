@@ -70,7 +70,7 @@ public class JokeFacadeTest {
     public void testAMembers() {
         List<Joke> list = facade.getAllJokes();
         Joke testData = new Joke("joke1", "joke reference1", "joke type1");
-        testData.setId(1L);
+        testData.setId(16L);
         assertEquals(testData, list.get(0));
     }
 
