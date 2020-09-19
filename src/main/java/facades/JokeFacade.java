@@ -102,7 +102,7 @@ public class JokeFacade {
         }  
     }
       
-      public static void main(String[] args) {
+      public static void insertJokeData(){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
         EntityManager em = emf.createEntityManager();
         try {
@@ -119,5 +119,9 @@ public class JokeFacade {
             em.close();
         }
     }
+//      
+//      public static void main(String[] args) {
+//      insertJokeData();
+//    }
     
 }

@@ -31,9 +31,9 @@ public class CarFacade {
         }
         return instance;
     }
-        public static void main(String[] args) {
-        insertData();
-    }
+//        public static void main(String[] args) {
+//        insertData();
+//    }
 
     private EntityManager getEntityManager() {
         return emf.createEntityManager();

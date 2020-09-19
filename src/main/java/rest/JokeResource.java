@@ -51,7 +51,7 @@ public class JokeResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getJokeCount() {
         long count = FACADE.getJokeCount();
-        return GSON.toJson(count);  
+        return "{\"count\":"+count+"}"; 
     }
     
     @Path("all")

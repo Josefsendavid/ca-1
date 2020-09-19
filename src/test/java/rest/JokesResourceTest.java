@@ -1,6 +1,7 @@
 package rest;
 
 import entities.Cars;
+import entities.Joke;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -23,11 +25,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class CarsResourceTest {
+public class JokesResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static Cars c1,c2,c3,c4,c5;
+    private static Joke c1,c2,c3,c4,c5;
     
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -60,54 +62,87 @@ public class CarsResourceTest {
 
     @BeforeEach
     public void setUp() {
-        EntityManager em = emf.createEntityManager();
-        Date date = new Date();
-        c1 = new Cars(1997, "Ford", "E350", 3000, "test", date);
-        c2 = new Cars(1999, "Chevy", "Venture", 4900, "test1", date);
-        c3 = new Cars(2000, "Chevy", "Venture", 5000, "test3", date);
-        c4 = new Cars(1996, "Jeep", "Grand Cherokee", 4799, "test4", date);
-        c5 = new Cars(2005, "Volvo", "v70", 44799, "test5", date);
+     
+    emf = Persistence.createEntityManagerFactory("puTest");
+    EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("Cars.deleteAllRows").executeUpdate();
-            em.persist(c1);
-            em.persist(c2);
-            em.persist(c3);
-            em.persist(c4);
-            em.persist(c5);
+            em.createNamedQuery("Joke.deleteAllRows").executeUpdate();
+            em.persist(new Joke("joke1", "joke reference1", "joke type1"));
+            em.persist(new Joke("joke2", "joke reference1", "joke type1"));
+            em.persist(new Joke("joke3", "joke reference2", "joke type2"));
             em.getTransaction().commit();
-        } finally { 
+        } finally {
             em.close();
         }
     }
-    
-//    @Test
-//    public void testServerIsUp() {
-//        System.out.println("Testing is server UP");
-//        given().when().get("/cars").then().statusCode(200);
-//    }
     
     @Test
     public void testCount() throws Exception {
         given()
         .contentType("application/json")
-        .get("/cars/count").then()
+        .get("/jokes/count").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
-        .body("count", equalTo(5));   
+        .body("count", equalTo(3));   
     }
+  
     @Test
     public void testGetAll() {
         given()
                 .contentType("application/json")
-                .get("/cars/all")
+                .get("/jokes/all")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("size()", is(5))
+                .body("size()", is(3))
                 .and()
-                .body("owner", hasItems("test","test1","test3","test4","test5"));
+                .body("reference", hasItems("joke reference1","joke reference1","joke reference2"));
                 
     }
     
+    @Test
+    public void testGetById(){
+        given()
+                .contentType("application/json")
+                .get("/jokes/id/8")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("reference", equalTo("joke reference1"))
+                .and()
+                .body("type", equalTo("joke type1"));
+                
+    }
+    
+    @Test
+    public void testServerIsUp() {
+        given()
+                .when()
+                .get("/jokes")
+                .then()
+                .statusCode(200);
+    }
+    
+    @Test
+    public void testSpecificType() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/jokes/type/type2").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("reference", hasItems("joke reference2"))
+                .and()
+                .body("joke", hasItems("joke3"));
+    }
+    
+    @Test
+    public void testSpecificReference() throws Exception {
+        given()
+                .contentType("application/json")
+                .get("/jokes/reference/reference2").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("joke", hasItems("joke3"));
+    }
 }

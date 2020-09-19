@@ -78,8 +78,8 @@ public class MemberFacade {
         }
     }
 
-    public static void main(String[] args) {
-        setUp();
-    }
+//    public static void main(String[] args) {
+//        setUp();
+//    }
 
 }
